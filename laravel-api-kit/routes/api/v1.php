@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Products\ProductsController;
+use App\Http\Controllers\Api\V1\Products\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
