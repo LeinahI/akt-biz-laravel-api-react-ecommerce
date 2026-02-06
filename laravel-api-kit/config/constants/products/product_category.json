@@ -1,0 +1,10 @@
+{
+    "productCategory": {
+        "diapers": "Diapers",
+        "baby_food": "Baby Food",
+        "toys": "Toys",
+        "clothing": "Clothing",
+        "accessories": "Accessories",
+        "furniture": "Furniture"
+    }
+}
