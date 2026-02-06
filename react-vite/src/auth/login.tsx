@@ -28,7 +28,7 @@ import { useAuth } from "@/context/AppContextProvider";
 export default function Login() {
 
     const navigate = useNavigate();
-    const { login, loading } = useAuth();
+    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -54,14 +54,6 @@ export default function Login() {
             setIsLoading(false);
         }
     };
-
-    if (loading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-                <p>Loading...</p>
-            </div>
-        );
-    }
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -112,7 +104,7 @@ export default function Login() {
                                 </InputGroupAddon>
                             </InputGroup>
                             {error && <p className="text-red-500 text-sm">{error}</p>}
-                            <Button disabled={isLoading} className="w-full">
+                            <Button disabled={isLoading} className="w-full" type="submit">
                                 {isLoading ? "Logging in..." : "Log In"}
                             </Button>
 

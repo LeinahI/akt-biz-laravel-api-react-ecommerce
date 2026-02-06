@@ -27,7 +27,7 @@ class ProductsStoreRequest extends FormRequest
             $prefix . 'name' => ['required', 'string', 'max:255', 'min:2'],
             $prefix . 'brand' => ['required', 'string', 'max:255', 'min:2'],
             $prefix . 'price' => ['required', 'numeric', 'min:0'],
-            $prefix . 'category' => ['required', ProductCategoryJSONHelper::getAllProductCategory('value')],
+            $prefix . 'category' => ['required', 'in:'.ProductCategoryJSONHelper::getAllProductCategory('key')],
             $prefix . 'stock_quantity' => ['required', 'integer', 'min:0'],
         ];
     }

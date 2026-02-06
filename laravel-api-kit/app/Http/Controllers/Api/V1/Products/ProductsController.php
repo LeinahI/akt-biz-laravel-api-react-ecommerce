@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Products;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\ApiController;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Models\Products\ProductsModel;
@@ -14,7 +14,7 @@ use App\Helpers\Products\ProductCategoryJSONHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class ProductsController extends Controller
+class ProductsController extends ApiController
 {
     public function index()
     {
@@ -40,6 +40,7 @@ class ProductsController extends Controller
         DB::beginTransaction();
         try {
             $product = ProductsModel::create([
+                'user_id' => auth()->id(), /* Set user_id to the currently authenticated user's ID */
                 'name' => $validatedData['store_name'],
                 'brand' => $validatedData['store_brand'],
                 'price' => $validatedData['store_price'],
@@ -50,7 +51,7 @@ class ProductsController extends Controller
             // Commit the transaction
             DB::commit();
 
-            return $this->success(new ProductsResource($product), 201);
+             return $this->success(new ProductsResource($product->load('user')), 201);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Adding Product: ' . $e->getMessage(), ['error_request' => $request->all()]);
@@ -77,7 +78,7 @@ class ProductsController extends Controller
             // Commit the transaction
             DB::commit();
 
-            return $this->success(new ProductsResource($product), 201);
+            return $this->success(new ProductsResource($product->load('user')), 200);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Updating Product: ' . $e->getMessage(), ['error_request' => $request->all()]);

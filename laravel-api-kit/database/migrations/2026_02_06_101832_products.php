@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table): void {
             $table->id('product_id');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade'); /* For Policy purposes that only same user_id can manage their products */
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); /* For Policy purposes that only same user_id can manage their products */
             $table->text('name');
             $table->text('brand');
             $table->decimal('price', 8, 2);

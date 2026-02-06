@@ -1,5 +1,5 @@
 "use client";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, CircleUser, Link as LinkIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, CircleUser, } from "lucide-react";
 import { useState } from "react";
 import {
     InputGroup,
@@ -24,12 +24,11 @@ import {
     FieldDescription,
     FieldGroup,
 } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
 
 export default function Register() {
 
     const navigate = useNavigate();
-    const { register, loading } = useAuth();
+    const { register } = useAuth();
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -67,14 +66,6 @@ export default function Register() {
             setIsLoading(false);
         }
     };
-
-    if (loading) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-                <p>Loading...</p>
-            </div>
-        );
-    }
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -170,9 +161,12 @@ export default function Register() {
                                     </FieldDescription>
                                 </Field>
                                 <Field>
-                                    <Button type="submit">Create Account</Button>
+                                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                                    <Button disabled={isLoading} className="w-full" type="submit">
+                                        {isLoading ? "Creating account..." : "Create account"}
+                                    </Button>
                                     <FieldDescription className="text-center">
-                                        Already have an account? <Link to="/" className="underline !font-bold!text-black">Log in</Link>
+                                        Already have an account? <Link to="/login" className="underline !font-bold!text-black">Log in</Link>
                                     </FieldDescription>
                                 </Field>
                             </FieldGroup>

@@ -13,7 +13,7 @@ class ProductsPolicy
      */
    public function modify(User $user, ProductsModel $product): Response
     {
-        return $user->user_id === $product->user_id
+        return $user->id === $product->user_id
             ? Response::allow()
             : Response::deny('You do not own this product to modify this.');
     }

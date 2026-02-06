@@ -30,14 +30,12 @@ final class AuthController extends ApiController
             'password' => Hash::make($request->password),
         ]);
 
-        $user->sendEmailVerificationNotification();
-
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return $this->created([
             'user' => new UserResource($user),
             'token' => $token,
-        ], 'User registered successfully. Please check your email to verify your account.');
+        ], 'User registered successfully');
     }
 
     public function login(LoginRequest $request): JsonResponse
