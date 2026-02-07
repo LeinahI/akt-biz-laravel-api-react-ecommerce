@@ -16,7 +16,6 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -31,8 +30,9 @@ import { useEffect, useState } from "react";
 import { AddProduct } from "@/components/table/dialog/add-product";
 import { productColumns } from "@/components/table/product-columns";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useProductStore } from "@/store/productStore";;
+import { useProductStore } from "@/store/productStore";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import PaginationComponent from "@/components/pagination/pagination-component";
 
 export default function ProductTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -67,18 +67,8 @@ export default function ProductTable() {
     fetchProducts(page);
   }, [searchParams, fetchProducts]);
 
-  const handleNextPage = () => {
-    if (pagination && currentPage < pagination.last_page) {
-      const nextPage = currentPage + 1;
-      navigate(`/products?page=${nextPage}`);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      const prevPage = currentPage - 1;
-      navigate(`/products?page=${prevPage}`);
-    }
+  const handlePageChange = (page: number) => {
+    navigate(`/products?page=${page}`);
   };
 
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -193,33 +183,15 @@ export default function ProductTable() {
         </Table>
       </div>
       {/* Pagination */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-muted-foreground text-sm">
-          {pagination && (
-            <>
-              Page {pagination.current_page} of {pagination.last_page} | Total: {pagination.total} items
-            </>
-          )}
+      {pagination && (
+        <div className="py-4">
+          <PaginationComponent
+            currentPage={currentPage}
+            lastPage={pagination.last_page}
+            onPageChange={handlePageChange}
+          />
         </div>
-        <div className="space-x-2">
-          <Button
-            disabled={currentPage === 1 || isLoading}
-            onClick={handlePreviousPage}
-            size="sm"
-            variant="outline"
-          >
-            Previous
-          </Button>
-          <Button
-            disabled={!pagination || currentPage === pagination.last_page || isLoading}
-            onClick={handleNextPage}
-            size="sm"
-            variant="outline"
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
