@@ -146,7 +146,8 @@ cd react-vite
 # Copy environment file
 cp .env.example .env
 
-# (optional) Change VITE_AUTH_SECRET or leave it to "mysecretkey" (still works if you leave it default) "ctrl+shift+c" to copy the key
+# (optional) Change VITE_AUTH_SECRET or leave it to "mysecretkey" (still works if you leave it default)
+# "ctrl+shift+c" to copy the key
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 # Install Node dependencies
