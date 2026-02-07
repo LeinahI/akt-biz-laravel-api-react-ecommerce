@@ -112,7 +112,7 @@ akt-biz-laravel-api-react-ecommerce/
 
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/LeinahI/akt-biz-laravel-api-react-ecommerce
 cd akt-biz-laravel-api-react-ecommerce
 
 # 2. Setup Backend
