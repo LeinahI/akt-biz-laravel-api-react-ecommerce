@@ -46,7 +46,7 @@ export default function SingleProduct() {
                 const data = await getSingleProduct(parseInt(id));
                 useProductStore.setState(state => ({ products: [...state.products, data] }));
             } catch (error) {
-                showErrorToast("Failed to fetch product details. ");
+                // showErrorToast("Failed to fetch product details. ");
             } finally {
                 setIsLoading(false);
             }
