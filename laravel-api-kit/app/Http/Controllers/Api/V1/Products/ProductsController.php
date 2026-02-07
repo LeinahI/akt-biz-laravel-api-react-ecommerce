@@ -12,19 +12,41 @@ use App\Http\Requests\Products\ProductsStoreRequest;
 use App\Http\Requests\Products\ProductsUpdateRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductsController extends ApiController
 {
-    public function index()
+    public function index(Request $request)
     {
         // Create a QueryBuilder instance for the ProductsModel
-        $products = QueryBuilder::for(ProductsModel::class)
+        $productsQuery = QueryBuilder::for(ProductsModel::class)
             ->allowedFilters(['name', 'brand', 'category']) // Allow clients to filter results by 'name', 'brand', or 'category' fields via query parameters
             ->allowedSorts(['stock_quantity', 'price', 'updated_at'])  // Allow clients to sort results by 'stock_quantity', 'price', or 'updated_at' fields via query parameters
-            ->orderBy('updated_at', 'desc') // sort by descending order
-            ->paginate();  // Paginate the results (default 15 items per page, or customizable via per_page parameter)
+            ->orderBy('updated_at', 'desc'); // sort by descending order
 
-        return $this->success(ProductsResource::collection($products->load('user'))); // Return the paginated products transformed through ProductsResource and wrapped in success response
+        // Put all products on collection 
+        $productsCollection = $productsQuery->get();
+
+        // Convert the filtered collection to paginator with custom page name
+        $pageName = 'page';
+        $currentPage = $request->query($pageName, 1);
+        $perPage = 5;
+
+
+        $products = new LengthAwarePaginator(
+            $productsCollection->forPage($currentPage, $perPage),
+            $productsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query(), 'pageName' => $pageName] // Preserve query parameters in pagination links
+        );
+
+        /* Transform the pagination items through ProductsResource */
+        $products->getCollection()->transform(function ($product) {
+            return new ProductsResource($product->load('user'));
+        });
+
+        return $this->success($products);
     }
 
     public function show(ProductsModel $product)

@@ -32,17 +32,23 @@
 * 4. On error: Captures error message, updates error state, and sets isLoading to false.
 */
 import { create } from "zustand";
-import type { ProductStateData } from "@/types/product-state";
+import type { ProductStateData, PaginationMeta } from "@/types/product-state";
 import { getProducts } from "@/hooks/get-products";
 
 export const useProductStore = create<ProductStateData>((set) => ({
   products: [],
   isLoading: false,
   error: null,
+  /* For Pagination */
+  pagination: null,
+  currentPage: 1,
 
   setProducts: (products) => set({ products }), /*  */
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
+  /* For Pagination */
+  setPagination: (pagination) => set({ pagination }),
+  setCurrentPage: (page) => set({ currentPage: page }),
 
   addProduct: (product) => {
     set((state) => ({
@@ -69,11 +75,34 @@ export const useProductStore = create<ProductStateData>((set) => ({
   },
 
     /* Fetch products on product-table */
-    fetchProducts: async () => {
+    fetchProducts: async (page = 1) => {
     set({ isLoading: true, error: null });
     try {
-      const data = await getProducts();
-      set({ products: data, isLoading: false });
+      const data = await getProducts(page);
+
+      /* Convert data to array if it's an object with numeric keys */
+      const productsArray = Array.isArray(data.data)
+        ? data.data
+        : Object.values(data.data);
+      set({ 
+        products: productsArray, 
+         pagination: {
+          current_page: data.current_page,
+          last_page: data.last_page,
+          per_page: data.per_page,
+          total: data.total,
+          from: data.from,
+          to: data.to,
+          first_page_url: data.first_page_url,
+          last_page_url: data.last_page_url,
+          next_page_url: data.next_page_url,
+          prev_page_url: data.prev_page_url,
+          path: data.path,
+          links: data.links,
+        },
+         currentPage: page,
+        isLoading: false
+       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch products';
       set({ error: errorMessage, isLoading: false });

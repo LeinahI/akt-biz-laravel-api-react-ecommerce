@@ -32,6 +32,7 @@ import { AddProduct } from "@/components/table/dialog/add-product";
 import { productColumns } from "@/components/table/product-columns";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useProductStore } from "@/store/productStore";;
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 export default function ProductTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -41,11 +42,13 @@ export default function ProductTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
   const [columnsProducts, setColumnsProducts] = useState<ColumnDef<ProductData>[]>([]);
 
-    // Get products from Zustand store
-  const { products, isLoading, error, fetchProducts } = useProductStore();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Get products from Zustand store
+  const { products, isLoading, error, fetchProducts, pagination, currentPage } = useProductStore();
 
   useEffect(() => {
     /* State management implemented from previous implementation */
@@ -57,6 +60,26 @@ export default function ProductTable() {
 
     loadData();
   }, [fetchProducts]);
+
+  /* Fetch Products when page changes */
+  useEffect(() => {
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    fetchProducts(page);
+  }, [searchParams, fetchProducts]);
+
+  const handleNextPage = () => {
+    if (pagination && currentPage < pagination.last_page) {
+      const nextPage = currentPage + 1;
+      navigate(`/products?page=${nextPage}`);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      const prevPage = currentPage - 1;
+      navigate(`/products?page=${prevPage}`);
+    }
+  };
 
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
@@ -77,11 +100,6 @@ export default function ProductTable() {
       columnVisibility,
       rowSelection,
       globalFilter,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 5, // 5 rows per page
-      }
     }
   });
 
@@ -177,21 +195,24 @@ export default function ProductTable() {
       {/* Pagination */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-muted-foreground text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of&nbsp;
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {pagination && (
+            <>
+              Page {pagination.current_page} of {pagination.last_page} | Total: {pagination.total} items
+            </>
+          )}
         </div>
         <div className="space-x-2">
           <Button
-            disabled={!table.getCanPreviousPage()}
-            onClick={() => table.previousPage()}
+            disabled={currentPage === 1 || isLoading}
+            onClick={handlePreviousPage}
             size="sm"
             variant="outline"
           >
             Previous
           </Button>
           <Button
-            disabled={!table.getCanNextPage()}
-            onClick={() => table.nextPage()}
+            disabled={!pagination || currentPage === pagination.last_page || isLoading}
+            onClick={handleNextPage}
             size="sm"
             variant="outline"
           >
