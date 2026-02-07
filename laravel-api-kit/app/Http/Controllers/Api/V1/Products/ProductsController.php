@@ -10,7 +10,6 @@ use App\Http\Resources\Products\ProductsResource;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\Products\ProductsStoreRequest;
 use App\Http\Requests\Products\ProductsUpdateRequest;
-use App\Helpers\Products\ProductCategoryJSONHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -21,16 +20,16 @@ class ProductsController extends ApiController
         // Create a QueryBuilder instance for the ProductsModel
         $products = QueryBuilder::for(ProductsModel::class)
             ->allowedFilters(['name', 'brand', 'category']) // Allow clients to filter results by 'name', 'brand', or 'category' fields via query parameters
-            ->allowedSorts(['stock_quantity', 'price', 'created_at'])  // Allow clients to sort results by 'stock_quantity', 'price', or 'created_at' fields via query parameters
-            ->orderBy('created_at', 'desc') // sort by descending order
+            ->allowedSorts(['stock_quantity', 'price', 'updated_at'])  // Allow clients to sort results by 'stock_quantity', 'price', or 'updated_at' fields via query parameters
+            ->orderBy('updated_at', 'asc') // sort by ascending order
             ->paginate();  // Paginate the results (default 15 items per page, or customizable via per_page parameter)
 
-        return $this->success(ProductsResource::collection($products)); // Return the paginated products transformed through ProductsResource and wrapped in success response
+        return $this->success(ProductsResource::collection($products->load('user'))); // Return the paginated products transformed through ProductsResource and wrapped in success response
     }
 
     public function show(ProductsModel $product)
     {
-        return $this->success(new ProductsResource($product)); // Return a single product transformed through ProductsResource, wrapped in success response
+        return $this->success(new ProductsResource($product->load('user'))); // Return a single product transformed through ProductsResource, wrapped in success response
     }
 
     public function store(ProductsStoreRequest $request)
@@ -51,7 +50,7 @@ class ProductsController extends ApiController
             // Commit the transaction
             DB::commit();
 
-             return $this->success(new ProductsResource($product->load('user')), 201);
+            return $this->success(new ProductsResource($product->load('user')), 201);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Adding Product: ' . $e->getMessage(), ['error_request' => $request->all()]);

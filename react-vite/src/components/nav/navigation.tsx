@@ -1,5 +1,5 @@
 "use client";
-import { Key, Barcode, NotebookPen, Search, LogOut, User } from "lucide-react";
+import { Key, Barcode, NotebookPen, LogOut, User } from "lucide-react";
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -20,12 +20,10 @@ export default function Navigation() {
         ...(isAuthenticated ? [
             { title: "Products", href: "/products", icon: Barcode },
             { title: "Profile", href: "/me", icon: User },
-            { title: "Create Post", href: "/post/create", icon: NotebookPen },
         ] : [
             { title: "Login", href: "/login", icon: Key },
             { title: "Register", href: "/register", icon: NotebookPen },
         ]),
-        { title: "Search", href: "/search", icon: Search },
     ];
 
     const handleLogout = async () => {
@@ -63,7 +61,7 @@ export default function Navigation() {
                     <NavigationMenuItem>
                         <button
                             onClick={handleLogout}
-                            className={`${navigationMenuTriggerStyle()} !bg-white !border-0`}
+                            className={`${navigationMenuTriggerStyle()} cursor-pointer`}
                         >
                             <LogOut className="h-5 w-5 shrink-0" />
                             Logout

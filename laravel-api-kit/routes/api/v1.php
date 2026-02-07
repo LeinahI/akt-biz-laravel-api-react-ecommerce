@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Products\ProductsController;
+use App\Http\Controllers\Api\V1\Products\ProductCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,10 @@ Route::middleware('throttle:auth')->group(function (): void {
 Route::middleware(['auth:sanctum', 'throttle:authenticated'])->group(function (): void {
     Route::post('logout', [AuthController::class, 'logout'])->name('api.v1.logout');
     Route::get('me', [AuthController::class, 'me'])->name('api.v1.me');
-
+    
     Route::apiResource('products', ProductsController::class);
+    Route::get('product-categories', [ProductCategoriesController::class, 'index'])->name('api.v1.product-categories');
+
     // Email verification. Commented out since it doesn't need for this exam
     // Route::post('email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
     //     ->middleware('signed')

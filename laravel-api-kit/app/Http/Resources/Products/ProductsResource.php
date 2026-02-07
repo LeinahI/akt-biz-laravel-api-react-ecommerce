@@ -23,7 +23,7 @@ class ProductsResource extends JsonResource
             'price' => $this->price,
             'category' => $this->category,
             'stock_quantity' => $this->stock_quantity,
-            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->format('F d, Y H:i:s'),
         ];
     }
 }

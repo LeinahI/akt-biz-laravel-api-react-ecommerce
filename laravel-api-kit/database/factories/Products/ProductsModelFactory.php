@@ -18,7 +18,7 @@ class ProductsModelFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => auth()->id(), /* Default to user_id 1 if no authenticated user (e.g. during seeding) */
+            'user_id' => 1, /* Default to user_id 1 if no authenticated user (e.g. during seeding) */
             'name' => $this->faker->word(),
             'brand' => $this->faker->company(),
             'price' => $this->faker->randomFloat(2, 1, 100),
