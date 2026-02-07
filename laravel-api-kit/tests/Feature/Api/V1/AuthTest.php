@@ -12,8 +12,8 @@ describe('Registration', function (): void {
         $response = $this->postJson('/api/v1/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'password123!',
+            'password_confirmation' => 'password123!',
         ]);
 
         $response->assertStatus(201)
@@ -27,7 +27,7 @@ describe('Registration', function (): void {
             ])
             ->assertJson([
                 'success' => true,
-                'message' => 'User registered successfully. Please check your email to verify your account.',
+                'message' => 'User registered successfully',
             ]);
 
         $this->assertDatabaseHas('users', [
