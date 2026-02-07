@@ -30,7 +30,6 @@ import type { ProductData } from "@/types/product-data";
 import { useEffect, useState } from "react";
 import { AddProduct } from "@/components/table/dialog/add-product";
 import { productColumns } from "@/components/table/product-columns";
-import { getProducts } from "@/hooks/get-products";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useProductStore } from "@/store/productStore";;
 
