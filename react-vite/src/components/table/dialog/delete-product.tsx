@@ -13,28 +13,32 @@ import { api } from "@/lib/api";
 import { useState } from "react";
 import useToasts from "@/hooks/use-toasts";
 import { useProductStore } from "@/store/productStore";
+import { useNavigate } from 'react-router-dom';
 
 
 interface DeleteProductProps {
     data: ProductData;
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
+    navigateLink?: string
 }
 
-export default function DeleteProduct({ data, isOpen, onOpenChange }: DeleteProductProps) {
+export default function DeleteProduct({ data, isOpen, onOpenChange, navigateLink = "/products" }: DeleteProductProps) {
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
     const deleteProduct = useProductStore((state) => state.deleteProduct);
 
     const [isDeleting, setIsDeleting] = useState(false);
-    
+    const navigate = useNavigate();
+
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
         try {
             const response = await api.delete(`/products/${data.product_id}`);
             // Show success toast from API response
             if (response.message) {
+                navigate(navigateLink);
                 deleteProduct(data.product_id); // Update Zustand store by removing the deleted product
                 showSuccessToast(response.message);
                 onOpenChange(false);

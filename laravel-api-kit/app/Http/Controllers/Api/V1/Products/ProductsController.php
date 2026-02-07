@@ -18,6 +18,7 @@ class ProductsController extends ApiController
 {
     public function index(Request $request)
     {
+        /* Reused LengthAwarePaginator code, from my Capstone Project */
         // Create a QueryBuilder instance for the ProductsModel
         $productsQuery = QueryBuilder::for(ProductsModel::class)
             ->allowedFilters(['name', 'brand', 'category']) // Allow clients to filter results by 'name', 'brand', or 'category' fields via query parameters

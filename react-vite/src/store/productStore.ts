@@ -9,11 +9,15 @@
 * products: An array that holds product objects fetched from the Laravel API.
 * isLoading: A boolean flag that indicates whether the product data is currently being fetched.
 * error: A variable that stores error messages if API calls fail, or null if there are no errors.
-
+* pagination: An object that holds pagination metadata returned from the API, such as current_page, last_page, per_page, total, etc.
+* currentPage: A number that tracks the current page of products being viewed, used for pagination controls.
+ 
 * ===== Setter Actions =====
 * setProducts: Directly replace the entire products array.
 * setLoading: Update the loading state
 * setError: Update the error message
+* setPagination: Update the pagination metadata
+* setCurrentPage: Update the current page number for pagination controls
 
 * ===== CRUD Actions =====
 * These actions modify the products array without API calls, allowing for immediate UI updates.

@@ -5,6 +5,7 @@ import Register from '@/auth/register.tsx';
 import Me from '@/root/me.tsx';
 import Products from '@/root/products/products.tsx';
 import { useAuth } from "@/context/AppContextProvider";
+import SingleProduct from '@/root/products/single/single-product';
 
 export default function AppRoutes() {
     const { isAuthenticated } = useAuth();
@@ -17,7 +18,7 @@ export default function AppRoutes() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/me" element={<Me />} />
                 <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<Products />} />
+                <Route path="/products/:id" element={<SingleProduct />} />
             </Routes>
         </div>
     )

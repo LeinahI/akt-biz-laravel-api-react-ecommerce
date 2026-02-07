@@ -1,3 +1,4 @@
+/* Reused code from my Capstone Project */
 import { buttonVariants } from '@/components/ui/button';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
@@ -104,7 +105,7 @@ export default function PaginationComponent({
                                 onPageChange(currentPage - 1);
                             }
                         }}
-                        className={`cursor-pointer bg-gray-800 text-white ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''}`}
+                        className={`cursor-pointer bg-gray-800 hover:bg-gray-800/50 hover:text-white text-white ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''}`}
                     />
                 </PaginationItem>
                 {getPageNumbers().map((page) => {
@@ -140,7 +141,7 @@ export default function PaginationComponent({
                                 onPageChange(currentPage + 1);
                             }
                         }}
-                        className={`cursor-pointer bg-gray-800 text-white ${currentPage === lastPage ? 'pointer-events-none opacity-50' : ''}`}
+                        className={`cursor-pointer bg-gray-800 hover:bg-gray-800/50 hover:text-white text-white ${currentPage === lastPage ? 'pointer-events-none opacity-50' : ''}`}
                     />
                 </PaginationItem>
             </PaginationContent>

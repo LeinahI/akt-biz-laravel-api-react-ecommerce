@@ -10,10 +10,17 @@ import type { ProductData } from "@/types/product-data";
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductActions({ data }: { data: ProductData }) {
+
+    const navigate = useNavigate();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+
+    const handleViewProduct = () => {
+        navigate(`/products/${data.product_id}`);
+    };
     return (
         <>
             <DropdownMenu>
@@ -25,6 +32,7 @@ export default function ProductActions({ data }: { data: ProductData }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem
+                        onClick={handleViewProduct}
                     >View Product</DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => setShowUpdateDialog(true)}
@@ -37,6 +45,8 @@ export default function ProductActions({ data }: { data: ProductData }) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* View Product */}
 
             {/* Delete Dialog */}
             <DeleteProduct
