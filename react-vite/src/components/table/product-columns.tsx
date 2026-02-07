@@ -1,21 +1,13 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { ProductData } from "@/types/product-data";
-
-  /* 
-  References:
-  Columns: https://www.shadcnui-blocks.com/components/table
-  */
+import ProductActions from "./product-actions";
+/* 
+References:
+Columns: https://www.shadcnui-blocks.com/components/table
+*/
 export const productColumns: ColumnDef<ProductData>[] = [
   {
     accessorKey: "product_id",
@@ -146,23 +138,8 @@ export const productColumns: ColumnDef<ProductData>[] = [
     header: () => <div className="text-center">Actions</div>,
     enableHiding: false,
     cell: ({ row }) => {
-      // const payment = row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0" variant="ghost">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Update Product</DropdownMenuItem>
-            <DropdownMenuItem>Delete Product</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      const data = row.original as ProductData;
+      return <ProductActions data={data} />;
     },
   },
 ];

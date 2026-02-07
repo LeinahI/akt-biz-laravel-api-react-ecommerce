@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AppContextProvider";
 export default function AppRoutes() {
     const { isAuthenticated } = useAuth();
     return (
-        <>
+        <div className="flex min-h-screen flex-col">
             <Navigation />
             <Routes>
                 <Route path="/" element={isAuthenticated ? <Navigate to="/me" replace /> : <Navigate to="/login" replace />} />
@@ -19,6 +19,6 @@ export default function AppRoutes() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<Products />} />
             </Routes>
-        </>
+        </div>
     )
 };

@@ -50,7 +50,7 @@ class ProductsController extends ApiController
             // Commit the transaction
             DB::commit();
 
-            return $this->success(new ProductsResource($product->load('user')), 201);
+            return $this->success(new ProductsResource($product->load('user')), "Product stored successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Adding Product: ' . $e->getMessage(), ['error_request' => $request->all()]);
@@ -77,7 +77,7 @@ class ProductsController extends ApiController
             // Commit the transaction
             DB::commit();
 
-            return $this->success(new ProductsResource($product->load('user')), 200);
+            return $this->success(new ProductsResource($product->load('user')), "Product updated successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Updating Product: ' . $e->getMessage(), ['error_request' => $request->all()]);
@@ -93,7 +93,7 @@ class ProductsController extends ApiController
             $product->delete();
             DB::commit();
 
-            return $this->success(new ProductsResource($product), 201);
+            return $this->success(new ProductsResource($product), "Product deleted successfully.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error Deleting Product: ' . $e->getMessage(), ['error_request' => $request->all()]);

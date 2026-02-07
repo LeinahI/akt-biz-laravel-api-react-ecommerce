@@ -100,7 +100,7 @@ export default function ProductTable() {
   /* Columns Filtering */
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between gap-2 py-4">
+      <div className="flex 2xs:flex-col sm:flex-row items-center justify-between gap-2 py-4 ">
         {/* Search Input */}
         <Input
           className="max-w-sm"

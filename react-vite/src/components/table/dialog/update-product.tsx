@@ -37,7 +37,7 @@ async function getProductCategories(): Promise<Record<string, string>> {
         throw new Error('Failed to fetch product categories' + (error instanceof Error ? `: ${error.message}` : ''));
     }
 }
-export function AddProduct() {
+export function UpdateProduct() {
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
