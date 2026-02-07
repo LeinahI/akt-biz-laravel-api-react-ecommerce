@@ -1,6 +1,6 @@
 import type { ProductData } from "@/types/product-data";
 
-export interface ProductStoreData {
+export interface ProductStateData {
   products: ProductData[];
   isLoading: boolean;
   error: string | null;

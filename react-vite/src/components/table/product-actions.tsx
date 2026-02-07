@@ -2,8 +2,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DeleteProduct from "./dialog/delete-product";
@@ -26,8 +24,8 @@ export default function ProductActions({ data }: { data: ProductData }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                    >View Product</DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => setShowUpdateDialog(true)}
                     >Update Product</DropdownMenuItem>

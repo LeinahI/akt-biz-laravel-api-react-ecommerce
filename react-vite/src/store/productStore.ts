@@ -32,10 +32,10 @@
 * 4. On error: Captures error message, updates error state, and sets isLoading to false.
 */
 import { create } from "zustand";
-import type { ProductStoreData } from "@/types/product-store";
+import type { ProductStateData } from "@/types/product-state";
 import { getProducts } from "@/hooks/get-products";
 
-export const useProductStore = create<ProductStoreData>((set) => ({
+export const useProductStore = create<ProductStateData>((set) => ({
   products: [],
   isLoading: false,
   error: null,

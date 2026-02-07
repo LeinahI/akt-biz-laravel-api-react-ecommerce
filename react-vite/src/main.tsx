@@ -6,6 +6,9 @@ import { AppContextProvider } from './context/AppContextProvider.tsx';
 import AppRoutes from './routes/approutes.tsx';
 import { Toaster } from 'sonner';
 
+// Set document title from environment variable
+document.title = import.meta.env.VITE_APP_NAME;
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppContextProvider>
