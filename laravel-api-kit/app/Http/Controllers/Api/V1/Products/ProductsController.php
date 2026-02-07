@@ -21,7 +21,7 @@ class ProductsController extends ApiController
         $products = QueryBuilder::for(ProductsModel::class)
             ->allowedFilters(['name', 'brand', 'category']) // Allow clients to filter results by 'name', 'brand', or 'category' fields via query parameters
             ->allowedSorts(['stock_quantity', 'price', 'updated_at'])  // Allow clients to sort results by 'stock_quantity', 'price', or 'updated_at' fields via query parameters
-            ->orderBy('updated_at', 'asc') // sort by ascending order
+            ->orderBy('updated_at', 'desc') // sort by descending order
             ->paginate();  // Paginate the results (default 15 items per page, or customizable via per_page parameter)
 
         return $this->success(ProductsResource::collection($products->load('user'))); // Return the paginated products transformed through ProductsResource and wrapped in success response

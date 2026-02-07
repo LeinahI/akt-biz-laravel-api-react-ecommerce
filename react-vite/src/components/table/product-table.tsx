@@ -32,6 +32,7 @@ import { AddProduct } from "@/components/table/dialog/add-product";
 import { productColumns } from "@/components/table/product-columns";
 import { getProducts } from "@/hooks/get-products";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useProductStore } from "@/store/productStore";;
 
 export default function ProductTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -43,29 +44,20 @@ export default function ProductTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [columnsProducts, setColumnsProducts] = useState<ColumnDef<ProductData>[]>([]);
-  const [products, setProducts] = useState<ProductData[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+
+    // Get products from Zustand store
+  const { products, isLoading, error, fetchProducts } = useProductStore();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch products');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    const loadColumns = async () => {
+    /* State management implemented from previous implementation */
+    const loadData = async () => {
+      await fetchProducts();
       const cols = await productColumns();
       setColumnsProducts(cols);
     };
-    loadColumns();
-    fetchProducts();
-  }, []);
+
+    loadData();
+  }, [fetchProducts]);
 
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({

@@ -30,6 +30,7 @@ import { useForm, Controller } from "react-hook-form";
 import type { ProductStoreData } from "@/types/product-data";
 import useToasts from "@/hooks/use-toasts";
 import { fetchProductCategories } from "@/hooks/fetch-product-categories";
+import { useProductStore } from "@/store/productStore";
 interface BackendErrors {
     [key: string]: string[];
 }
@@ -38,6 +39,7 @@ export function AddProduct() {
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
+    const addProduct = useProductStore((state) => state.addProduct);
 
     const [categories, setCategories] = useState<Record<string, string>>({});
     const [fetchError, setFetchError] = useState<string | null>(null);
@@ -83,6 +85,7 @@ export function AddProduct() {
 
             // Show success toast from API response
             if (response.message) {
+                addProduct(response.data); // Update Zustand store with new product
                 showSuccessToast(response.message);
                 reset();
             }
@@ -98,9 +101,7 @@ export function AddProduct() {
                         message: errors[field][0] || "Validation error",
                     });
                 });
-                // showErrorToast(err.response.data.message || "Validation failed");
             } else {
-                console.error("Failed to add product:", err);
                 showErrorToast("Failed to add product");
             }
         }

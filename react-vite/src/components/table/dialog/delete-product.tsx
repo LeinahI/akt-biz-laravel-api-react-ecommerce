@@ -12,6 +12,8 @@ import type { ProductData } from "@/types/product-data";
 import { api } from "@/lib/api";
 import { useState } from "react";
 import useToasts from "@/hooks/use-toasts";
+import { useProductStore } from "@/store/productStore";
+
 
 interface DeleteProductProps {
     data: ProductData;
@@ -23,14 +25,17 @@ export default function DeleteProduct({ data, isOpen, onOpenChange }: DeleteProd
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
+    const deleteProduct = useProductStore((state) => state.deleteProduct);
 
     const [isDeleting, setIsDeleting] = useState(false);
+    
     const handleDeleteConfirm = async () => {
         setIsDeleting(true);
         try {
             const response = await api.delete(`/products/${data.product_id}`);
             // Show success toast from API response
             if (response.message) {
+                deleteProduct(data.product_id); // Update Zustand store by removing the deleted product
                 showSuccessToast(response.message);
                 onOpenChange(false);
             }

@@ -25,6 +25,8 @@ import { useForm, Controller } from "react-hook-form";
 import type { ProductUpdateData } from "@/types/product-data";
 import useToasts from "@/hooks/use-toasts";
 import { fetchProductCategories } from "@/hooks/fetch-product-categories";
+import { useProductStore } from "@/store/productStore";
+
 interface BackendErrors {
     [key: string]: string[];
 }
@@ -39,6 +41,7 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
+    const updateProduct = useProductStore((state) => state.updateProduct);
 
     const [categories, setCategories] = useState<Record<string, string>>({});
     const [fetchError, setFetchError] = useState<string | null>(null);
@@ -64,7 +67,7 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
     const { control, handleSubmit, formState: { isSubmitting }, reset, setError, } = useForm<ProductUpdateData>({
         defaultValues: {
             product_id: data.product_id,
-            update_name: data.name ||"",
+            update_name: data.name || "",
             update_brand: data.brand || "",
             update_category: data.category || "",
             update_price: data.price || "",
@@ -85,8 +88,9 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
 
             // Show success toast from API response
             if (response.message) {
+                updateProduct(response.data); // Update Zustand store with updated product
                 showSuccessToast(response.message);
-                reset();
+                onOpenChange(false);
             }
         } catch (err: any) {
             // Handle backend validation errors
@@ -100,10 +104,8 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
                         message: errors[field][0] || "Validation error",
                     });
                 });
-                // showErrorToast(err.response.data.message || "Validation failed");
             } else {
-                console.error("Failed to add product:", err);
-                showErrorToast("Failed to add product");
+                showErrorToast("Failed to update product");
             }
         }
     };

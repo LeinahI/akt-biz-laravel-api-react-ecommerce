@@ -72,6 +72,20 @@ export const productColumns = async (): Promise<ColumnDef<ProductData>[]> => {
         </div>
       ),
     },
+    /* Product Category */
+    {
+      accessorKey: "category",
+      header: () => <div className="text-left">Category</div>,
+      cell: ({ row }) => {
+        const categoryKey = row.getValue("category") as string;
+        const categoryName = categories[categoryKey] || categoryKey;
+        return (
+          <div className="flex justify-start">
+            <div>{categoryName}</div>
+          </div>
+        );
+      },
+    },
     /* Product Price */
     {
       accessorKey: "price",
@@ -92,20 +106,6 @@ export const productColumns = async (): Promise<ColumnDef<ProductData>[]> => {
           currency: "PHP",
         }).format(price);
         return <div className="text-left font-medium">{formatted}</div>;
-      },
-    },
-    /* Product Category */
-    {
-      accessorKey: "category",
-      header: () => <div className="text-left">Category</div>,
-      cell: ({ row }) => {
-        const categoryKey = row.getValue("category") as string;
-        const categoryName = categories[categoryKey] || categoryKey;
-        return (
-          <div className="flex justify-start">
-            <div>{categoryName}</div>
-          </div>
-        );
       },
     },
     /* Stock quantity */
