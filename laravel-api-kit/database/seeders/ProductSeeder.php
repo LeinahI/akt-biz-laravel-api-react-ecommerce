@@ -7,7 +7,8 @@ namespace Database\Seeders;
 use App\Models\Products\ProductsModel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 final class ProductSeeder extends Seeder
 {
@@ -18,6 +19,11 @@ final class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        ProductsModel::factory(10)->create();
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'), /* The password was = password */
+        ]);
+        ProductsModel::factory(20)->create();
     }
 }

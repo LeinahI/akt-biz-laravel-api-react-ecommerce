@@ -131,6 +131,7 @@ php artisan key:generate
 php artisan migrate
 
 # (Optional) Seed sample data
+# It also seed user account email: test@example.com | pass: password
 php artisan db:seed productseeder
 
 # Run unit test to verify if it's working
@@ -145,7 +146,7 @@ cd react-vite
 # Copy environment file
 cp .env.example .env
 
-# Change VITE_AUTH_SECRET or leave it to "mysecretkey" (still works if you leave it default)
+# (optional) Change VITE_AUTH_SECRET or leave it to "mysecretkey" (still works if you leave it default) "ctrl+shift+c" to copy the key
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 # Install Node dependencies
