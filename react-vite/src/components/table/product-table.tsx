@@ -1,5 +1,9 @@
 "use client";
-
+/* 
+References:
+Table: https://www.shadcnui-blocks.com/components/table
+initialState: https://tanstack.com/table/v8/docs/framework/react/guide/table-state
+*/
 import {
   type ColumnFiltersState,
   flexRender,
@@ -22,20 +26,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { productColumns } from "@/components/table/product-columns";
 import type { ProductData } from "@/types/product-data";
-import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { AddProduct } from "@/components/table/dialog/add-product";
-
-async function getProducts(): Promise<ProductData[]> {
-  try {
-    const res = await api.get('/products');
-    return res.data;
-  } catch (error) {
-    throw new Error('Failed to fetch Products' + (error instanceof Error ? `: ${error.message}` : ''));
-  }
-}
+import { productColumns } from "@/components/table/product-columns";
+import { getProducts } from "@/hooks/get-products";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export default function ProductTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -46,6 +42,7 @@ export default function ProductTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const [columnsProducts, setColumnsProducts] = useState<ColumnDef<ProductData>[]>([]);
   const [products, setProducts] = useState<ProductData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,18 +59,18 @@ export default function ProductTable() {
       }
     };
 
+    const loadColumns = async () => {
+      const cols = await productColumns();
+      setColumnsProducts(cols);
+    };
+    loadColumns();
     fetchProducts();
   }, []);
 
-  /* 
-  References:
-  Table: https://www.shadcnui-blocks.com/components/table
-  initialState: https://tanstack.com/table/v8/docs/framework/react/guide/table-state
-  */
   const [globalFilter, setGlobalFilter] = React.useState("");
   const table = useReactTable({
     data: products,
-    columns: productColumns,
+    columns: columnsProducts,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

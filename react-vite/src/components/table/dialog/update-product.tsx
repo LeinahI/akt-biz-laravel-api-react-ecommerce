@@ -22,22 +22,20 @@ import {
 import { api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import type { ProductStoreData } from "@/types/product-data";
+import type { ProductUpdateData } from "@/types/product-data";
 import useToasts from "@/hooks/use-toasts";
-
+import { fetchProductCategories } from "@/hooks/fetch-product-categories";
 interface BackendErrors {
     [key: string]: string[];
 }
 
-async function getProductCategories(): Promise<Record<string, string>> {
-    try {
-        const res = await api.get('/product-categories');
-        return res.data?.productCategory || {};
-    } catch (error) {
-        throw new Error('Failed to fetch product categories' + (error instanceof Error ? `: ${error.message}` : ''));
-    }
+interface UpdateProductProps {
+    data: ProductUpdateData;
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
 }
-export function UpdateProduct() {
+
+export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProductProps) {
 
     // Then in your component, add this line after other hooks:
     const { showSuccessToast, showErrorToast } = useToasts();
@@ -50,7 +48,7 @@ export function UpdateProduct() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const data = await getProductCategories();
+                const data = await fetchProductCategories();
                 setCategories(data);
             } catch (err) {
                 setFetchError(err instanceof Error ? err.message : 'Failed to fetch categories');
@@ -62,26 +60,27 @@ export function UpdateProduct() {
         fetchCategories();
     }, []);
 
-    /* For storing data */
-    const { control, handleSubmit, formState: { isSubmitting }, reset, setError, } = useForm<ProductStoreData>({
+    /* For updating data */
+    const { control, handleSubmit, formState: { isSubmitting }, reset, setError, } = useForm<ProductUpdateData>({
         defaultValues: {
-            store_name: "",
-            store_brand: "",
-            store_category: "",
-            store_price: null,
-            store_stock_quantity: null ,
+            product_id: data.product_id,
+            update_name: data.name ||"",
+            update_brand: data.brand || "",
+            update_category: data.category || "",
+            update_price: data.price || "",
+            update_stock_quantity: data.stock_quantity || "",
         }
     });
 
-    const onSubmit = async (data: ProductStoreData) => {
+    const onSubmit = async (data: ProductUpdateData) => {
         setBackendErrors({});
         try {
-            const response = await api.post("/products", {
-                store_name: data.store_name.trim(),
-                store_brand: data.store_brand.trim(),
-                store_category: data.store_category.trim(),
-                store_price: data.store_price,
-                store_stock_quantity: data.store_stock_quantity,
+            const response = await api.put(`/products/${data.product_id}`, {
+                update_name: data.update_name.trim(),
+                update_brand: data.update_brand.trim(),
+                update_category: data.update_category.trim(),
+                update_price: data.update_price,
+                update_stock_quantity: data.update_stock_quantity,
             });
 
             // Show success toast from API response
@@ -96,7 +95,7 @@ export function UpdateProduct() {
                 setBackendErrors(errors);
 
                 Object.keys(errors).forEach((field) => {
-                    setError(field as keyof ProductStoreData, {
+                    setError(field as keyof ProductUpdateData, {
                         type: "server",
                         message: errors[field][0] || "Validation error",
                     });
@@ -110,32 +109,29 @@ export function UpdateProduct() {
     };
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="outline" className="2xs:w-full sm:w-fit">Add New Product</Button>
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="2xs:max-w-2xs xs:max-w-sm md:max-w-lg lg:max-w-2xl">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogHeader>
-                        <DialogTitle>Add New Product</DialogTitle>
+                        <DialogTitle>Update Product</DialogTitle>
                         <DialogDescription>
-                            Fill out the form below to add a new product. Click save when you&apos;re
+                            Fill out the form below to update the product. Click save when you&apos;re
                             done.
                         </DialogDescription>
                     </DialogHeader>
-                    <FieldGroup>
+                    <FieldGroup className="mt-5">
                         <div className="grid grid-cols-2 gap-2">
                             <div className="col-span-1">
                                 <Field>
-                                    <Label htmlFor="store_name">Product Name</Label>
+                                    <Label htmlFor="update_name">Product Name</Label>
                                     <Controller
-                                        name="store_name"
+                                        name="update_name"
                                         control={control}
                                         render={({ field, fieldState: { error } }) => (
                                             <>
                                                 <Input
                                                     {...field}
-                                                    id="store_name"
+                                                    id="update_name"
                                                     placeholder="Product Name"
                                                     disabled={isSubmitting}
                                                     className={error ? "border-red-500" : ""}
@@ -150,15 +146,15 @@ export function UpdateProduct() {
                             </div>
                             <div className="col-span-1">
                                 <Field>
-                                    <Label htmlFor="store_brand">Brand Name</Label>
+                                    <Label htmlFor="update_brand">Brand Name</Label>
                                     <Controller
-                                        name="store_brand"
+                                        name="update_brand"
                                         control={control}
                                         render={({ field, fieldState: { error } }) => (
                                             <>
                                                 <Input
                                                     {...field}
-                                                    id="store_brand"
+                                                    id="update_brand"
                                                     placeholder="Brand Name"
                                                     disabled={isSubmitting}
                                                     className={error ? "border-red-500" : ""}
@@ -173,9 +169,9 @@ export function UpdateProduct() {
                             </div>
                             <div className="col-span-2">
                                 <Field>
-                                    <Label htmlFor="store_category">Category</Label>
+                                    <Label htmlFor="update_category">Category</Label>
                                     <Controller
-                                        name="store_category"
+                                        name="update_category"
                                         control={control}
                                         render={({ field, fieldState: { error } }) => (
                                             <>
@@ -184,7 +180,7 @@ export function UpdateProduct() {
                                                     value={field.value}
                                                     onValueChange={field.onChange}
                                                 >
-                                                    <SelectTrigger id="store_category" className={error ? "border-red-500" : ""}>
+                                                    <SelectTrigger id="update_category" className={error ? "border-red-500" : ""}>
                                                         <SelectValue placeholder={fetchLoading ? "Fetching categories..." : "Select a category"} />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -206,15 +202,15 @@ export function UpdateProduct() {
                             </div>
                             <div className="col-span-1">
                                 <Field>
-                                    <Label htmlFor="store_price">Price in ₱</Label>
+                                    <Label htmlFor="update_price">Price in ₱</Label>
                                     <Controller
-                                        name="store_price"
+                                        name="update_price"
                                         control={control}
                                         render={({ field, fieldState: { error } }) => (
                                             <>
                                                 <Input
                                                     {...field}
-                                                    id="store_price"
+                                                    id="update_price"
                                                     placeholder="1"
                                                     disabled={isSubmitting}
                                                     className={error ? "border-red-500" : ""}
@@ -229,15 +225,15 @@ export function UpdateProduct() {
                             </div>
                             <div className="col-span-1">
                                 <Field>
-                                    <Label htmlFor="store_stock_quantity">Stock Quantity</Label>
+                                    <Label htmlFor="update_stock_quantity">Stock Quantity</Label>
                                     <Controller
-                                        name="store_stock_quantity"
+                                        name="update_stock_quantity"
                                         control={control}
                                         render={({ field, fieldState: { error } }) => (
                                             <>
                                                 <Input
                                                     {...field}
-                                                    id="store_stock_quantity"
+                                                    id="update_stock_quantity"
                                                     placeholder="1"
                                                     disabled={isSubmitting}
                                                     className={error ? "border-red-500" : ""}
@@ -256,7 +252,7 @@ export function UpdateProduct() {
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Adding..." : "Add Product"}</Button>
+                        <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Updating..." : "Update Product"}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

@@ -31,7 +31,7 @@ export default function Navigation() {
         navigate("/");
     };
 
-    return (<div className="flex w-full flex-col items-center p-4 bg-red-400 dark:bg-black sm:items-start">
+    return (<div className="flex w-full flex-col items-center p-4 bg-gray-800 sm:items-start">
         <NavigationMenu>
             <NavigationMenuList>
                 {navigationMenuItems.map((item) => {
@@ -44,11 +44,11 @@ export default function Navigation() {
                                 className={navigationMenuTriggerStyle()}
                             >
                                 <Link
-                                    className={`flex-row items-center gap-2.5 ${isActive && "bg-blue-500! text-white!" }`}
+                                    className={`flex-row items-center gap-2.5 ${isActive && "bg-[#ccb965]! text-black!" }`}
                                     to={item.href}
                                 >
                                     <item.icon
-                                        className={`h-5 w-5 shrink-0 ${isActive && "text-white!" }`}
+                                        className={`h-5 w-5 shrink-0 ${isActive && "text-black!" }`}
                                     />
                                     {item.title}
                                 </Link>

@@ -34,8 +34,9 @@ export default function DeleteProduct({ data, isOpen, onOpenChange }: DeleteProd
                 showSuccessToast(response.message);
                 onOpenChange(false);
             }
-        } catch (error) {
-            showErrorToast("Failed to delete product: " + (error instanceof Error ? error.message : 'Unknown error'));
+        } catch (e) {
+            const errorMessage = e.response?.data?.message || e.message || "Failed to delete product";
+            showErrorToast(errorMessage);
             setIsDeleting(false);
         }
     };

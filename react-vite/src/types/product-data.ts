@@ -17,14 +17,14 @@ export interface ProductStoreData {
   store_name: string;
   store_brand: string;
   store_category: string;
-  store_price: number | null; /* Decimal */
-  store_stock_quantity: number | null; /* Integer */
+  store_price: number | string; /* Decimal, String for allowing empty string */
+  store_stock_quantity: number | string; /* Integer, String for allowing empty string */
 }
 
-export interface ProductUpdateData {
+export interface ProductUpdateData extends ProductData {
   update_name: string;
   update_brand: string;
   update_category: string;
-  update_price: number | null; /* Decimal */
-  update_stock_quantity: number | null; /* Integer */
+  update_price: number | string; /* Decimal */
+  update_stock_quantity: number | string; /* Integer */
 }

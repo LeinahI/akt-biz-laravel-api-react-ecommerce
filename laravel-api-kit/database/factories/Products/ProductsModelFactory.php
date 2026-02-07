@@ -22,7 +22,7 @@ class ProductsModelFactory extends Factory
             'name' => $this->faker->word(),
             'brand' => $this->faker->company(),
             'price' => $this->faker->randomFloat(2, 1, 100),
-            'category' => $this->faker->randomElement(explode(',', ProductCategoryJSONHelper::getAllProductCategory('value'))),
+            'category' => $this->faker->randomElement(explode(',', ProductCategoryJSONHelper::getAllProductCategory('key'))),
             'stock_quantity' => $this->faker->numberBetween(1, 100),
         ];
     }

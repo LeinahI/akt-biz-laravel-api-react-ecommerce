@@ -1,3 +1,8 @@
+/* 
+References:
+Controller: https://react-hook-form.com/docs/usecontroller/controller
+*/
+
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -24,19 +29,11 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import type { ProductStoreData } from "@/types/product-data";
 import useToasts from "@/hooks/use-toasts";
-
+import { fetchProductCategories } from "@/hooks/fetch-product-categories";
 interface BackendErrors {
     [key: string]: string[];
 }
 
-async function getProductCategories(): Promise<Record<string, string>> {
-    try {
-        const res = await api.get('/product-categories');
-        return res.data?.productCategory || {};
-    } catch (error) {
-        throw new Error('Failed to fetch product categories' + (error instanceof Error ? `: ${error.message}` : ''));
-    }
-}
 export function AddProduct() {
 
     // Then in your component, add this line after other hooks:
@@ -50,7 +47,7 @@ export function AddProduct() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const data = await getProductCategories();
+                const data = await fetchProductCategories();
                 setCategories(data);
             } catch (err) {
                 setFetchError(err instanceof Error ? err.message : 'Failed to fetch categories');
@@ -68,8 +65,8 @@ export function AddProduct() {
             store_name: "",
             store_brand: "",
             store_category: "",
-            store_price: null,
-            store_stock_quantity: null ,
+            store_price: "",
+            store_stock_quantity: "",
         }
     });
 
@@ -112,7 +109,7 @@ export function AddProduct() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="2xs:w-full sm:w-fit">Add New Product</Button>
+                <Button variant="outline" className="2xs:w-full sm:w-fit bg-[#ccb965] hover:bg-[#ccb965]/70">Add New Product</Button>
             </DialogTrigger>
             <DialogContent className="2xs:max-w-2xs xs:max-w-sm md:max-w-lg lg:max-w-2xl">
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -123,7 +120,7 @@ export function AddProduct() {
                             done.
                         </DialogDescription>
                     </DialogHeader>
-                    <FieldGroup>
+                    <FieldGroup className="mt-5">
                         <div className="grid grid-cols-2 gap-2">
                             <div className="col-span-1">
                                 <Field>
