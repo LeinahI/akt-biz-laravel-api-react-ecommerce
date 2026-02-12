@@ -12,42 +12,29 @@ use App\Http\Requests\Products\ProductsStoreRequest;
 use App\Http\Requests\Products\ProductsUpdateRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductsController extends ApiController
 {
-    public function index(Request $request)
+    public function index()
     {
-        /* Reused LengthAwarePaginator code, from my Capstone Project */
         // Create a QueryBuilder instance for the ProductsModel
         $productsQuery = QueryBuilder::for(ProductsModel::class)
             ->allowedFilters(['name', 'brand', 'category']) // Allow clients to filter results by 'name', 'brand', or 'category' fields via query parameters
             ->allowedSorts(['stock_quantity', 'price', 'updated_at'])  // Allow clients to sort results by 'stock_quantity', 'price', or 'updated_at' fields via query parameters
-            ->orderBy('updated_at', 'desc'); // sort by descending order
+            ->orderBy('updated_at', 'desc') // sort by descending order
+            ->paginate(5);
 
-        // Put all products on collection 
-        $productsCollection = $productsQuery->get();
-
-        // Convert the filtered collection to paginator with custom page name
-        $pageName = 'page';
-        $currentPage = $request->query($pageName, 1);
-        $perPage = 5;
-
-
-        $products = new LengthAwarePaginator(
-            $productsCollection->forPage($currentPage, $perPage),
-            $productsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query(), 'pageName' => $pageName] // Preserve query parameters in pagination links
-        );
-
-        /* Transform the pagination items through ProductsResource */
-        $products->getCollection()->transform(function ($product) {
+        /* Refactored for efficiency
+        Because the previous code does have ->get() (which fetches ALL rows into PHP memory)
+        and then paginates manually. The indexes help the db, but you're still loading everything into memory.
+        Thus, we can just paginate quickly and then transform the paginated collection, which is much more efficient. 
+        The indexes will still be used for filtering/sorting, but we won't load all rows into memory at once.
+        */
+        $productsQuery->getCollection()->transform(function ($product) {
             return new ProductsResource($product->load('user'));
         });
 
-        return $this->success($products);
+        return $this->success($productsQuery);
     }
 
     public function show(ProductsModel $product)

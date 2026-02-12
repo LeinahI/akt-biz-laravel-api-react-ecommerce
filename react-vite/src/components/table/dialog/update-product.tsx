@@ -252,9 +252,9 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
                     </FieldGroup>
                     <DialogFooter className="mt-4">
                         <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline" className="cursor-pointer hover:bg-gray-200!">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Updating..." : "Update Product"}</Button>
+                        <Button type="submit" disabled={isSubmitting} className="cursor-pointer bg-[#ccb965]! hover:bg-[#ccb965]/80! text-white!">{isSubmitting ? "Updating..." : "Update Product"}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

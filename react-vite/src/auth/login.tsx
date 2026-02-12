@@ -1,7 +1,7 @@
 
 "use client";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -28,7 +28,7 @@ import { useAuth } from "@/context/AppContextProvider";
 export default function Login() {
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -55,6 +55,13 @@ export default function Login() {
         }
     };
 
+    /* Redirect to me if authenticated */
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/me");
+        }
+    }, [isAuthenticated, navigate]);
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <div className="flex min-h-screen w-3xl flex-col items-center gap-3 py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -77,7 +84,6 @@ export default function Login() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    required
                                 />
                             </InputGroup>
                             <InputGroup>
@@ -90,11 +96,10 @@ export default function Login() {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required
                                 />
 
                                 <InputGroupAddon align="inline-end">
-                                    <InputGroupButton onClick={togglePasswordVisibility} className={cn("!bg-transparent !border-none shadow-none focus-visible:ring-0", showPassword && "text-primary")}>
+                                    <InputGroupButton onClick={togglePasswordVisibility} className={cn("bg-transparent! border-none! shadow-none focus-visible:ring-0", showPassword && "text-primary")}>
                                         {showPassword ? (
                                             <EyeOffIcon className="size-4 text-muted-foreground" />
                                         ) : (
@@ -104,7 +109,7 @@ export default function Login() {
                                 </InputGroupAddon>
                             </InputGroup>
                             {error && <p className="text-red-500 text-sm">{error}</p>}
-                            <Button disabled={isLoading} className="w-full" type="submit">
+                            <Button disabled={isLoading} className="w-full bg-[#1e2939]! text-white hover:bg-[#1e2939]/90!" type="submit">
                                 {isLoading ? "Logging in..." : "Log In"}
                             </Button>
 

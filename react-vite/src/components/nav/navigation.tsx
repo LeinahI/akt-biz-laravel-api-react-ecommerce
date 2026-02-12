@@ -1,6 +1,6 @@
 "use client";
 import { Key, Barcode, NotebookPen, LogOut, User } from "lucide-react";
-
+import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     NavigationMenu,
@@ -44,11 +44,11 @@ export default function Navigation() {
                                 className={navigationMenuTriggerStyle()}
                             >
                                 <Link
-                                    className={`flex-row items-center gap-2.5 ${isActive && "bg-[#ccb965]! text-black!" }`}
+                                    className={`flex-row items-center gap-2.5 ${isActive && "bg-[#ccb965]! text-black!"}`}
                                     to={item.href}
                                 >
                                     <item.icon
-                                        className={`h-5 w-5 shrink-0 ${isActive && "text-black!" }`}
+                                        className={`h-5 w-5 shrink-0 ${isActive && "text-black!"}`}
                                     />
                                     {item.title}
                                 </Link>
@@ -58,15 +58,12 @@ export default function Navigation() {
                 })}
                 {isAuthenticated && (
                     <>
-                    <NavigationMenuItem>
-                        <button
-                            onClick={handleLogout}
-                            className={`${navigationMenuTriggerStyle()} cursor-pointer`}
-                        >
-                            <LogOut className="h-5 w-5 shrink-0" />
-                            Logout
-                        </button>
-                    </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Button className={`${navigationMenuTriggerStyle()} cursor-pointer bg-red-600! hover:bg-red-600/80! text-white!`} onClick={handleLogout}>
+                                <LogOut className="h-5 w-5 shrink-0" />
+                                Logout
+                            </Button>
+                        </NavigationMenuItem>
                     </>
                 )}
             </NavigationMenuList>

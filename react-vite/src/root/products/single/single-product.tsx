@@ -101,10 +101,10 @@ export default function SingleProduct() {
                         </p>
                         <p className="text-muted-foreground mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam aperiam blanditiis dolore atque laborum repellendus quasi deleniti nam eligendi porro ducimus consectetur mollitia magnam quas, inventore quod nobis, impedit sit itaque architecto distinctio delectus. Odit animi cupiditate, quo voluptas omnis, quia perspiciatis et provident eveniet incidunt impedit aspernatur vitae ipsa?</p>
                         <div className="flex gap-3 mt-6">
-                            <Button className=" rounded-full" size="lg" onClick={() => setShowUpdateDialog(true)}>
+                            <Button className="cursor-pointer bg-[#ccb965]! hover:bg-[#ccb965]/80! text-white! rounded-full" size="lg" onClick={() => setShowUpdateDialog(true)}>
                                 Update
                             </Button>
-                            <Button className="rounded-full" size="lg" onClick={() => setShowDeleteDialog(true)}>
+                            <Button className="cursor-pointer bg-red-600! hover:bg-red-600!/80! text-white! rounded-full" size="lg" onClick={() => setShowDeleteDialog(true)}>
                                 Delete
                             </Button>
                         </div>

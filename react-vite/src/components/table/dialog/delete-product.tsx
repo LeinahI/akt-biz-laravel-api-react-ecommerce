@@ -60,13 +60,13 @@ export default function DeleteProduct({ data, isOpen, onOpenChange, navigateLink
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isDeleting}>
+                    <AlertDialogCancel disabled={isDeleting} className="cursor-pointer hover:bg-gray-200!">
                         Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDeleteConfirm}
                         disabled={isDeleting}
-                        className="bg-red-500 hover:bg-red-600"
+                        className="cursor-pointer bg-red-600! hover:bg-red-600!/80! text-white!"
                     >
                         {isDeleting ? "Deleting..." : "Delete"}
                     </AlertDialogAction>

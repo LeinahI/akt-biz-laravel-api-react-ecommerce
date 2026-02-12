@@ -252,9 +252,9 @@ export function AddProduct() {
                     </FieldGroup>
                     <DialogFooter className="mt-4">
                         <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
+                            <Button variant="outline" className="cursor-pointer hover:bg-gray-200!">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Adding..." : "Add Product"}</Button>
+                        <Button type="submit" disabled={isSubmitting} className="cursor-pointer bg-[#ccb965]! hover:bg-[#ccb965]/80! text-white!">{isSubmitting ? "Adding..." : "Add Product"}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

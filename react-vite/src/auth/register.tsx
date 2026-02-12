@@ -1,6 +1,6 @@
 "use client";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, CircleUser, } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     InputGroup,
     InputGroupAddon,
@@ -28,7 +28,7 @@ import {
 export default function Register() {
 
     const navigate = useNavigate();
-    const { register } = useAuth();
+    const { register, isAuthenticated } = useAuth();
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -67,6 +67,13 @@ export default function Register() {
         }
     };
 
+    /* Redirect to me if authenticated */
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/me");
+        }
+    }, [isAuthenticated, navigate]);
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex min-h-screen w-3xl flex-col items-center gap-3 py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -90,7 +97,6 @@ export default function Register() {
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        required
                                     />
                                 </InputGroup>
                                 <InputGroup>
@@ -103,7 +109,6 @@ export default function Register() {
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        required
                                     />
                                 </InputGroup>
                                 <Field>
@@ -118,7 +123,6 @@ export default function Register() {
                                                 type={showPassword ? "text" : "password"}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                required
                                             />
 
                                             <InputGroupAddon align="inline-end">
@@ -142,7 +146,6 @@ export default function Register() {
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 value={confirmPassword}
                                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                                required
                                             />
 
                                             <InputGroupAddon align="inline-end">
@@ -162,7 +165,7 @@ export default function Register() {
                                 </Field>
                                 <Field>
                                     {error && <p className="text-red-500 text-sm">{error}</p>}
-                                    <Button disabled={isLoading} className="w-full" type="submit">
+                                    <Button disabled={isLoading} className="w-full bg-[#1e2939]! text-white hover:bg-[#1e2939]/90!" type="submit">
                                         {isLoading ? "Creating account..." : "Create account"}
                                     </Button>
                                     <FieldDescription className="text-center">
