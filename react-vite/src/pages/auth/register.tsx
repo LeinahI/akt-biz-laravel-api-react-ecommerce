@@ -28,7 +28,7 @@ import {
 export default function Register() {
 
     const navigate = useNavigate();
-    const { register, isAuthenticated } = useAuth();
+    const { register } = useAuth();
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -66,13 +66,6 @@ export default function Register() {
             setIsLoading(false);
         }
     };
-
-    /* Redirect to me if authenticated */
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/me");
-        }
-    }, [isAuthenticated, navigate]);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">

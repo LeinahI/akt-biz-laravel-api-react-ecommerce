@@ -28,7 +28,7 @@ import { useAuth } from "@/context/AppContextProvider";
 export default function Login() {
 
     const navigate = useNavigate();
-    const { login, isAuthenticated } = useAuth();
+    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -55,12 +55,6 @@ export default function Login() {
         }
     };
 
-    /* Redirect to me if authenticated */
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate("/me");
-        }
-    }, [isAuthenticated, navigate]);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">

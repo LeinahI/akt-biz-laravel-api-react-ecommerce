@@ -1,24 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AppContextProvider';
 import { Button } from "@/components/ui/button";
 
 export default function Me() {
-    const navigate = useNavigate();
-    const { user, loading, isAuthenticated, logout } = useAuth();
-
-    // Redirect to login if not authenticated
-    useEffect(() => {
-        if (!loading && !isAuthenticated) {
-            navigate('/login');
-        }
-    }, [isAuthenticated, loading, navigate]);
-
-    if (!isAuthenticated || !user) {
-        return null; // Redirecting to login
-    }
+    const { user, logout } = useAuth();
 
     return (
         <div className="flex items-center justify-center bg-zinc-50 font-sans dark:bg-black">
