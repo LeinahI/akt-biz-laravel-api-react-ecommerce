@@ -102,7 +102,7 @@ export function AddProduct() {
                     });
                 });
             } else {
-                showErrorToast("Failed to add product");
+                showErrorToast(err.response?.data?.message || "Failed to add product");
             }
         }
     };

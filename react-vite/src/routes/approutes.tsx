@@ -14,11 +14,12 @@ export default function AppRoutes() {
     const { loading } = useAuth();
 
     // Show loading screen while auth is being checked
-    if (loading) {
-        return <div className="flex min-h-screen flex-col">
-            <p>Loading...</p>
-        </div>;
-    }
+    // if (loading) {
+    //     return <div className="flex min-h-screen flex-col">
+    //         <Navigation />
+    //         <p>Loading...</p>
+    //     </div>;
+    // }
 
     return (
         <div className="flex min-h-screen flex-col">

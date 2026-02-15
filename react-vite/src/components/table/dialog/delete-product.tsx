@@ -42,6 +42,7 @@ export default function DeleteProduct({ data, isOpen, onOpenChange, navigateLink
                 deleteProduct(data.product_id); // Update Zustand store by removing the deleted product
                 showSuccessToast(response.message);
                 onOpenChange(false);
+                setIsDeleting(false);
             }
         } catch (e) {
             const errorMessage = e.response?.data?.message || e.message || "Failed to delete product";

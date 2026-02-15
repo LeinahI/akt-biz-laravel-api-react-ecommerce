@@ -64,7 +64,7 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
     }, []);
 
     /* For updating data */
-    const { control, handleSubmit, formState: { isSubmitting }, reset, setError, } = useForm<ProductUpdateData>({
+    const { control, handleSubmit, formState: { isSubmitting }, setError, } = useForm<ProductUpdateData>({
         defaultValues: {
             product_id: data.product_id,
             update_name: data.name || "",
@@ -105,7 +105,7 @@ export default function UpdateProduct({ data, isOpen, onOpenChange }: UpdateProd
                     });
                 });
             } else {
-                showErrorToast("Failed to update product");
+                showErrorToast(err.response?.data?.message || "Failed to update product");
             }
         }
     };

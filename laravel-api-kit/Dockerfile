@@ -23,6 +23,9 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+#! NEW Set Composer process timeout
+ENV COMPOSER_PROCESS_TIMEOUT=999
+
 # Create system user
 RUN useradd -G www-data,root -u $uid -d /home/$user $user \
     && mkdir -p /home/$user/.composer \

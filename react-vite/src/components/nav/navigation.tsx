@@ -1,7 +1,8 @@
 "use client";
 import { Key, Barcode, NotebookPen, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -13,8 +14,8 @@ import { useAuth } from "@/context/AppContextProvider";
 
 export default function Navigation() {
     const location = useLocation();
-    const navigate = useNavigate();
     const { isAuthenticated, logout } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const navigationMenuItems = [
         ...(isAuthenticated ? [
@@ -27,8 +28,12 @@ export default function Navigation() {
     ];
 
     const handleLogout = async () => {
-        await logout();
-        navigate("/");
+        setLoading(true);
+        try {
+            await logout();
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (<div className="flex w-full flex-col items-center p-4 bg-gray-800 sm:items-start">
@@ -59,7 +64,7 @@ export default function Navigation() {
                 {isAuthenticated && (
                     <>
                         <NavigationMenuItem>
-                            <Button className={`${navigationMenuTriggerStyle()} cursor-pointer bg-red-600! hover:bg-red-600/80! text-white!`} onClick={handleLogout}>
+                            <Button disabled={loading} className={`${navigationMenuTriggerStyle()} cursor-pointer bg-red-600! hover:bg-red-600/80! text-white!`} onClick={handleLogout}>
                                 <LogOut className="h-5 w-5 shrink-0" />
                                 Logout
                             </Button>

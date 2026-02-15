@@ -2,9 +2,21 @@
 
 import { useAuth } from '@/context/AppContextProvider';
 import { Button } from "@/components/ui/button";
+import { useState } from 'react';
 
 export default function Me() {
     const { user, logout } = useAuth();
+    
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        try {
+            await logout();
+        } finally {
+            setIsLoggingOut(false);
+        }
+    };
 
     return (
         <div className="flex items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -23,7 +35,7 @@ export default function Me() {
                     </div>
                 </div>
 
-                <Button className="w-fit mt-4 px-6 py-2 bg-red-600! text-white hover:bg-red-600/80!" onClick={logout}>
+                <Button disabled={isLoggingOut} className="w-fit mt-4 px-6 py-2 bg-red-600! text-white hover:bg-red-600/80!" onClick={handleLogout}>
                     Logout
                 </Button>
             </main>

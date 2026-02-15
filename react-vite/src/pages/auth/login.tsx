@@ -1,7 +1,7 @@
 
 "use client";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -24,41 +24,46 @@ import {
     FieldGroup,
 } from "@/components/ui/field"
 import { useAuth } from "@/context/AppContextProvider";
+import { useForm, Controller } from "react-hook-form";
+
+interface LoginFormData {
+    email: string;
+    password: string;
+}
 
 export default function Login() {
 
     const navigate = useNavigate();
     const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+
+    /* For storing data */
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm<LoginFormData>({
+        defaultValues: {
+            email: "",
+            password: "",
+        }
+    });
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: LoginFormData) => {
         setError("");
-        setIsLoading(true);
-
         try {
-            await login(email, password);
+            await login(data.email, data.password);
             // Redirect to /me after successful login
             navigate("/me");
         } catch (err: any) {
-            setError(err?.response?.data?.message || "Login failed. Please try again.");
-        } finally {
-            setIsLoading(false);
+            setError(err?.response?.data?.message || 'Login failed. Please try again.');
         }
     };
 
-
     return (
-        <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <div className="flex min-h-screen w-3xl flex-col items-center gap-3 py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <div className="flex min-h-[92.7vh] items-center justify-center bg-[#1e2939]/90 font-sans">
+            <div className="flex w-3xl flex-col items-center gap-3 py-32 px-16 sm:items-star">
                 <Card className="w-full">
                     <CardHeader>
                         <CardTitle className="text-xl">Login to your account</CardTitle>
@@ -67,44 +72,56 @@ export default function Login() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-y-4">
-                            <InputGroup>
-                                <InputGroupAddon>
-                                    <MailIcon className="text-muted-foreground" />
-                                </InputGroupAddon>
-                                <InputGroupInput
-                                    className="border-0 shadow-none focus-visible:ring-0"
-                                    placeholder="Email"
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </InputGroup>
-                            <InputGroup>
-                                <InputGroupAddon>
-                                    <LockIcon className="text-muted-foreground" />
-                                </InputGroupAddon>
-                                <InputGroupInput
-                                    className="border-0 shadow-none focus-visible:ring-0"
-                                    placeholder="Password"
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
+                        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
+                            <Controller
+                                name="email"
+                                control={control}
+                                render={({ field, fieldState: { error } }) => (
+                                    <InputGroup>
+                                        <InputGroupAddon>
+                                            <MailIcon className="text-muted-foreground" />
+                                        </InputGroupAddon>
+                                        <InputGroupInput
+                                            className={cn("border-0 shadow-none focus-visible:ring-0", error && "border-red-500")}
+                                            placeholder="Email"
+                                            type="email"
+                                            {...field}
+                                            disabled={isSubmitting}
+                                        />
+                                    </InputGroup>
+                                )}
+                            />
+                            <Controller
+                                name="password"
+                                control={control}
+                                render={({ field, fieldState: { error } }) => (
+                                    <InputGroup>
+                                        <InputGroupAddon>
+                                            <LockIcon className="text-muted-foreground" />
+                                        </InputGroupAddon>
+                                        <InputGroupInput
+                                            className={cn("border-0 shadow-none focus-visible:ring-0", error && "border-red-500")}
+                                            placeholder="Password"
+                                            type={showPassword ? "text" : "password"}
+                                            {...field}
+                                            disabled={isSubmitting}
+                                        />
 
-                                <InputGroupAddon align="inline-end">
-                                    <InputGroupButton onClick={togglePasswordVisibility} className={cn("bg-transparent! border-none! shadow-none focus-visible:ring-0", showPassword && "text-primary")}>
-                                        {showPassword ? (
-                                            <EyeOffIcon className="size-4 text-muted-foreground" />
-                                        ) : (
-                                            <EyeIcon className="size-4 text-muted-foreground" />
-                                        )}
-                                    </InputGroupButton>
-                                </InputGroupAddon>
-                            </InputGroup>
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
-                            <Button disabled={isLoading} className="w-full bg-[#1e2939]! text-white hover:bg-[#1e2939]/90!" type="submit">
-                                {isLoading ? "Logging in..." : "Log In"}
+                                        <InputGroupAddon align="inline-end">
+                                            <InputGroupButton onClick={togglePasswordVisibility} className={cn("bg-transparent! border-none! shadow-none focus-visible:ring-0", showPassword && "text-primary")}>
+                                                {showPassword ? (
+                                                    <EyeOffIcon className="size-4 text-muted-foreground" />
+                                                ) : (
+                                                    <EyeIcon className="size-4 text-muted-foreground" />
+                                                )}
+                                            </InputGroupButton>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                )}
+                            />
+                            {error && (<p className="text-red-700 text-sm font-medium">{error}</p>)}
+                            <Button disabled={isSubmitting} className="w-full bg-[#1e2939]! text-white hover:bg-[#1e2939]/90!" type="submit">
+                                {isSubmitting ? "Logging in..." : "Log In"}
                             </Button>
 
                             <FieldGroup>
